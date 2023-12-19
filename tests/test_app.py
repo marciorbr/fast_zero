@@ -1,7 +1,3 @@
-from fastapi.testclient import TestClient
-
-from fast_zero.app import app
-
 """
 Fase 1 - Organizar (Arrange)
 Nesta primeira etapa, estamos preparando o ambiente para o teste. No exemplo, a linha com o comentário Arrange não é o teste em si, ela monta o ambiente para que o teste possa ser executado. Estamos configurando um client de testes para fazer a requisição ao app.
@@ -14,10 +10,27 @@ Esta é a etapa de verificar se tudo correu como esperado. É fácil notar onde 
 """
 
 
-def test_root_deve_retornar_200_e_ola_mundo():
-    client = TestClient(app)   # Arrange
+def test_root_deve_retornar_200_e_ola_mundo(client):
 
     response = client.get('/')   # Act
 
     assert response.status_code == 200   # Assert
     assert response.json() == {'message': 'Olá Mundo!'}   # Assert
+
+
+def test_create_user(client):
+
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'alice',
+            'email': 'alice@example.com',
+            'password': 'secret',
+        },
+    )
+    assert response.status_code == 201
+    assert response.json() == {
+        'username': 'alice',
+        'email': 'alice@example.com',
+        'id': 1,
+    }
