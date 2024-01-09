@@ -1,1 +1,15 @@
 Generic single-database configuration.
+
+## Iteragindo com alembic
+* Configurar Alembic
+```
+alembic init migrations
+```
+* Para criar migration
+```
+alembic revision --autogenerate -m "create users table"
+```
+* Para efetivar as migrations
+```
+alembic upgrade head
+```

@@ -8,70 +8,88 @@ Aqui é a etapa onde acontece a ação principal do teste, que consiste em chama
 Fase 3 - Afirmar (Assert)
 Esta é a etapa de verificar se tudo correu como esperado. É fácil notar onde estamos fazendo a verificação, pois essa linha sempre tem a palavra reservada assert. A verificação é booleana, ou está correta ou não está. Por isso, um teste deve sempre incluir um assert para verificar se o comportamento esperado está correto.
 """
+from fastapi.testclient import TestClient
 
 
 def test_root_deve_retornar_200_e_ola_mundo(client):
+    response = client.get('/')
 
-    response = client.get('/')   # Act
-
-    assert response.status_code == 200   # Assert
-    assert response.json() == {'message': 'Olá Mundo!'}   # Assert
-
-
-# def test_create_user(client):
-
-#     response = client.post(
-#         '/users/',
-#         json={
-#             'username': 'alice',
-#             'email': 'alice@example.com',
-#             'password': 'secret',
-#         },
-#     )
-#     assert response.status_code == 201
-#     assert response.json() == {
-#         'username': 'alice',
-#         'email': 'alice@example.com',
-#         'id': 1,
-#     }
+    assert response.status_code == 200
+    assert response.json() == {'message': 'Olá Mundo!'}
 
 
-# def test_read_users(client):
-#     response = client.get('/users/')
-#     assert response.status_code == 200
-#     assert response.json() == {
-#         'users': [
-#             {
-#                 'username': 'alice',
-#                 'email': 'alice@example.com',
-#                 'id': 1,
-#             }
-#         ]
-#     }
+def test_create_user(client):
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'test',
+            'password': 'secret',
+            'email': 'test@test.com',
+        },
+    )
+
+    assert response.status_code == 201
+    assert response.json() == {
+        'id': 1,
+        'username': 'test',
+        'email': 'test@test.com',
+    }
 
 
-# def test_update_user(client):
-#     response = client.put(
-#         '/users/1',
-#         json={
-#             'username': 'bob',
-#             'email': 'bob@example.com',
-#             'password': 'mynewpassword',
-#         },
-#     )
+def test_read_users_empty(client: TestClient):
+    response = client.get('/users/')
 
-#     assert response.status_code == 200
-#     assert response.json() == {
-#         'username': 'bob',
-#         'email': 'bob@example.com',
-#         'id': 1,
-#     }
+    assert response.status_code == 200
+    assert response.json() == {'users': []}
 
 
-# def test_delete_user(client):
-#     response = client.delete(
-#         '/users/1',
-#     )
+def test_read_users(client: TestClient, user):
+    response = client.get('/users/')
 
-#     assert response.status_code == 200
-#     assert response.json() == {'detail': 'User deleted'}
+    assert response.status_code == 200
+    assert response.json() == {
+        'users': [
+            {
+                'id': 1,
+                'username': 'Teste',
+                'email': 'test@test.com',
+            },
+        ],
+    }
+
+
+def test_update_user(client, user):
+    response = client.put(
+        '/users/1',
+        json={
+            'username': 'bob',
+            'email': 'bob@test.com',
+            'password': 'mynewpassword',
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        'id': 1,
+        'username': 'bob',
+        'email': 'bob@test.com',
+    }
+
+
+def test_delete_user(client, user):
+    response = client.delete(f'/users/{user.id}')
+
+    assert response.status_code == 200
+    assert response.json() == {'detail': 'User deleted'}
+
+
+def test_get_token(client, user):
+    response = client.post(
+        '/token',
+        data={'username': user.email, 'password': user.clean_password},
+    )
+    token = response.json()
+
+    assert response.status_code == 200
+    assert 'access_token' in token
+    assert 'token_type' in token
