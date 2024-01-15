@@ -36,5 +36,8 @@ jobs:
       - name: Instalar dependências
         run: poetry install
 
+      - name: Check variables
+        run: echo ${{ secrets.DATABASE_URL }} - ${{ secrets.SECRET_KEY }} - ${{ secrets.ALGORITHM }} - ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
+
       - name: Executar testes
         run: poetry run task test
