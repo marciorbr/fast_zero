@@ -1,6 +1,5 @@
-## Vsual Studio Code
-*.vscode
-.vscode
+## Visual Studio Code
+.vscode/
 
 ## Python
 
