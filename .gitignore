@@ -1,3 +1,7 @@
+## Vsual Studio Code
+#  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore
+.vscode/
+
 ## Python
 
 # Byte-compiled / optimized / DLL files
