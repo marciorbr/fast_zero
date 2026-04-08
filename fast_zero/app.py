@@ -3,6 +3,8 @@ import sys
 
 from fastapi import FastAPI, Request
 
+from fast_zero.schemas import Message
+
 # Configurar logging para saída no console
 logging.basicConfig(
     level=logging.INFO,
@@ -14,7 +16,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 
 
-@app.get('/')
+@app.get('/', response_model=Message)
 def read_root(request: Request):
     logger.info(f'Requisição GET / - {request._headers}')
     return {'message': 'Olá Mundo!'}
