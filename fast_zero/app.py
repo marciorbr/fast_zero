@@ -43,9 +43,9 @@ def read_users():
     '/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
 )
 def update_user(user_id: int, user: UserSchema):
-    if user_id > len(database) or user_id <= 1:
+    if user_id > len(database) or user_id < 1:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
+            status_code=HTTPStatus.NOT_FOUND, detail='USER NOT FOUND'
         )
     user_with_id = UserDb(**user.model_dump(), id=user_id)
     database[user_id - 1] = user_with_id
