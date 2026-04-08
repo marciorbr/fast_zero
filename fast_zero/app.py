@@ -4,7 +4,7 @@ from http import HTTPStatus
 
 from fastapi import FastAPI, Request
 
-from fast_zero.schemas import Message, UserDb, UserPublic, UserSchema
+from fast_zero.schemas import Message, UserDb, UserList, UserPublic, UserSchema
 
 # Configurar logging para saída no console
 logging.basicConfig(
@@ -32,3 +32,8 @@ def create_user(user: UserSchema):
     database.append(user_with_id)
     logger.info(f'Usuario criado: {user_with_id.id} - {user_with_id.username}')
     return user_with_id
+
+
+@app.get('/users/', status_code=HTTPStatus.OK, response_model=UserList)
+def read_users():
+    return {'users': database}
