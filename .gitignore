@@ -1,6 +1,8 @@
 ## Visual Studio Code
 .vscode/
 
+database.db
+
 ## Python
 
 # Byte-compiled / optimized / DLL files
