@@ -44,3 +44,21 @@ poetry run ruff check .
 ## Criar gitignore
 
 pipx run ignr -p python > .gitignore
+
+## Alembic
+
+* Gerar uma migration
+```bash
+alembic revision --autogenerate -m "create users table"
+```
+
+* Executar a migration para última versão
+```bash
+alembic upgrade head
+```
+
+# Reverter a migrate
+
+```bash
+alembic downgrade -1
+```
