@@ -76,20 +76,25 @@ def test_update_user_unauthorized(client, user):
     # assert response.json() == {'detail': 'USER NOT FOUND'}
 
 
-def test_read_user_by_id_not_found(client, user):
+def test_read_user_by_id_not_found(client, user, token):
 
-    response = client.get('/users/999')
+    response = client.get(
+        '/users/999',
+        headers={'Authorization': f'Bearer {token}'}
+    )
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'USER NOT FOUND'}
 
 
-def test_read_user_by_id(client, user):
+def test_read_user_by_id(client, user, token):
 
     user_schema = UserPublic.model_validate(user).model_dump()
 
-    response = client.get(f'/users/{user.id}')
-
+    response = client.get(
+        f'/users/{user.id}',
+        headers={'Authorization': f'Bearer {token}'}
+    )
     assert response.status_code == HTTPStatus.OK
     assert response.json() == user_schema
 
