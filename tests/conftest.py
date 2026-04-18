@@ -80,3 +80,13 @@ def user(session: Session):
     user.clear_password = password
 
     return user
+
+
+@pytest.fixture
+def token(client, user):
+    response = client.post(
+        '/token',
+        data={'username': user.email, 'password': user.clear_password},
+    )
+
+    return response.json()['access_token']
