@@ -22,7 +22,7 @@ SECRET_KEY = 'your_secret_key'
 ALGORITHM = 'HS256'
 TIME_ZONE = 'America/Porto_Velho'
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/token')
 
 pwd_context = PasswordHash.recommended()
 
