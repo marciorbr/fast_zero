@@ -11,16 +11,18 @@ from sqlalchemy.orm import Session
 
 from fast_zero.database import get_session
 from fast_zero.models import User
+from fast_zero.settings import Settings
 
-# SECRET_KEY = Settings().SECRET_KEY
-# ALGORITHM = Settings().ALGORITHM
-# ACCESS_TOKEN_EXPIRE_MINUTES = Settings().ACCESS_TOKEN_EXPIRE_MINUTES
-# TIME_ZONE = Settings().TIME_ZONE
+settings = Settings()
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-SECRET_KEY = 'your_secret_key'
-ALGORITHM = 'HS256'
-TIME_ZONE = 'America/Porto_Velho'
+# SECRET_KEY = settings.SECRET_KEY
+# ALGORITHM = settings.ALGORITHM
+# ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
+# TIME_ZONE = settings.TIME_ZONE
+
+# ACCESS_TOKEN_EXPIRE_MINUTES = 30
+# ALGORITHM = 'HS256'
+# TIME_ZONE = 'America/Porto_Velho'
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/token')
 
@@ -39,7 +41,9 @@ def get_current_user(
     )
 
     try:
-        payload = decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = decode(
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+        )
         subject_email = payload.get('sub')
         if not subject_email:
             raise credentials_exception
@@ -68,11 +72,13 @@ def create_access_token(data: dict):
     to_encode = data.copy()
 
     # Adiciona um tempo de expiração ao token
-    expire = datetime.now(tz=ZoneInfo(TIME_ZONE)) + timedelta(
-        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+    expire = datetime.now(tz=ZoneInfo(settings.TIME_ZONE)) + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
 
     to_encode.update({'exp': expire})
 
-    encoded_jwt = encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = encode(
+        to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
+    )
     return encoded_jwt
