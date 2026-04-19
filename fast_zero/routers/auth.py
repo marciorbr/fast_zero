@@ -14,12 +14,13 @@ from fast_zero.security import create_access_token, verify_password
 router = APIRouter(prefix='/auth', tags=['auth'])
 
 T_Session = Annotated[Session, Depends(get_session)]
+T_Oauth2Form = Annotated[OAuth2PasswordRequestForm, Depends()]
 
 
 @router.post('/token', response_model=Token)
 def login_for_access_token(
     session: T_Session,
-    form_data: OAuth2PasswordRequestForm = Depends(),
+    form_data: T_Oauth2Form,
 ):
 
     user = session.scalar(select(User).where(User.email == form_data.username))
