@@ -22,6 +22,34 @@ def test_create_user(client):
     }
 
 
+def test_create_user_conflict_username(client, user):
+
+    response = client.post(
+        '/users/',
+        json={
+            'username': user.username,
+            'email': 'alice@example.com',
+            'password': 'testpassword',
+        },
+    )
+    assert response.status_code == HTTPStatus.CONFLICT
+    assert response.json() == {'detail': 'Username already exists'}
+
+
+def test_create_user_conflict_email(client, user):
+
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'Alice',
+            'email': user.email,
+            'password': 'testpassword',
+        },
+    )
+    assert response.status_code == HTTPStatus.CONFLICT
+    assert response.json() == {'detail': 'Email already exists'}
+
+
 def test_read_users(client, user, token):
 
     user_schema = UserPublic.model_validate(user).model_dump()
@@ -65,7 +93,25 @@ def test_update_user_unauthorized(client, user):
     )
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
-    # assert response.json() == {'detail': 'USER NOT FOUND'}
+    assert response.json() == {'detail': 'Not authenticated'}
+
+
+def test_update_user_forbidden(client, user, token):
+
+    response = client.put(
+        '/users/999',
+        headers={'Authorization': f'Bearer {token}'},
+        json={
+            'username': 'charlie',
+            'email': 'charlie@example.com',
+            'password': 'testpassword',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json() == {
+        'detail': 'Not enough permissions to perform this action'
+    }
 
 
 def test_read_user_by_id_not_found(client, user, token):
