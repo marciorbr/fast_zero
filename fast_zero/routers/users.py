@@ -1,9 +1,9 @@
 from http import HTTPStatus
-from sqlite3 import IntegrityError
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from fast_zero.database import get_session

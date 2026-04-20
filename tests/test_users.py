@@ -108,28 +108,28 @@ def test_delete_user_forbidden(client, user, token):
     assert response.status_code == HTTPStatus.FORBIDDEN
 
 
-# def test_update_integrity_error(client, user, token):
+def test_update_integrity_error(client, user, token):
 
-#     # Criar um segundo usuário para causar o erro de integridade
-#     client.post(
-#         '/users/',
-#         json={
-#             'username': 'fausto',
-#             'email': 'fausto@example.com',
-#             'password': 'secret',
-#         },
-#     )
+    # Criar um segundo usuário para causar o erro de integridade
+    client.post(
+        '/users/',
+        json={
+            'username': 'fausto',
+            'email': 'fausto@example.com',
+            'password': 'secret',
+        },
+    )
 
-#     # Alterando o user da fixture para fausto
-#     response = client.put(
-#         f'/users/{user.id}',
-#         headers={'Authorization': f'Bearer {token}'},
-#         json={
-#             'username': 'fausto',
-#             'email': 'bob@example.com',
-#             'password': 'mynewpassword',
-#         },
-#     )
+    # Alterando o user da fixture para fausto
+    response = client.put(
+        f'/users/{user.id}',
+        headers={'Authorization': f'Bearer {token}'},
+        json={
+            'username': 'fausto',
+            'email': 'bob@example.com',
+            'password': 'mynewpassword',
+        },
+    )
 
-#     assert response.status_code == HTTPStatus.CONFLICT
-#     assert response.json() == {'detail': 'Username or email already exists'}
+    assert response.status_code == HTTPStatus.CONFLICT
+    assert response.json() == {'detail': 'Username or email already exists'}
