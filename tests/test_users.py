@@ -152,6 +152,9 @@ def test_delete_user_forbidden(client, user, token):
     )
 
     assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json() == {
+        'detail': 'Not enough permissions to perform this action'
+    }
 
 
 def test_update_integrity_error(client, user, token):
