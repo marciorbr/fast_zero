@@ -157,25 +157,32 @@ def test_delete_user_forbidden(client, other_user, token):
     }
 
 
-def test_update_integrity_error(client, user, token):
-
-    # Criar um segundo usuário para causar o erro de integridade
-    client.post(
-        '/users/',
-        json={
-            'username': 'fausto',
-            'email': 'fausto@example.com',
-            'password': 'secret',
-        },
-    )
+def test_update_integrity_error_username(client, user, other_user, token):
 
     # Alterando o user da fixture para fausto
     response = client.put(
         f'/users/{user.id}',
         headers={'Authorization': f'Bearer {token}'},
         json={
-            'username': 'fausto',
+            'username': other_user.username,
             'email': 'bob@example.com',
+            'password': 'mynewpassword',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.CONFLICT
+    assert response.json() == {'detail': 'Username or email already exists'}
+
+
+def test_update_integrity_error_email(client, user, other_user, token):
+
+    # Alterando o user da fixture para fausto
+    response = client.put(
+        f'/users/{user.id}',
+        headers={'Authorization': f'Bearer {token}'},
+        json={
+            'username': 'bob',
+            'email': other_user.email,
             'password': 'mynewpassword',
         },
     )
