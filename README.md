@@ -73,3 +73,6 @@ alembic downgrade -1
 * Serie Opentelemetry
 
 * Live migrations
+
+
+## site 4devs gerar cpf, cnpj, etc..
