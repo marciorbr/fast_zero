@@ -81,10 +81,10 @@ def test_update_user(client, user, token):
     }
 
 
-def test_update_user_unauthorized(client, user):
+def test_update_user_unauthorized(client, other_user):
 
     response = client.put(
-        '/users/999',
+        f'/users/{other_user.id}',
         json={
             'username': 'charlie',
             'email': 'charlie@example.com',
@@ -96,10 +96,10 @@ def test_update_user_unauthorized(client, user):
     assert response.json() == {'detail': 'Not authenticated'}
 
 
-def test_update_user_forbidden(client, user, token):
+def test_update_user_forbidden(client, other_user, token):
 
     response = client.put(
-        '/users/999',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
         json={
             'username': 'charlie',
@@ -145,10 +145,10 @@ def test_delete_user(client, user, token):
     assert response.json() == {'message': 'User deleted'}
 
 
-def test_delete_user_forbidden(client, user, token):
+def test_delete_user_forbidden(client, other_user, token):
 
     response = client.delete(
-        '/users/999', headers={'Authorization': f'Bearer {token}'}
+        f'/users/{other_user.id}', headers={'Authorization': f'Bearer {token}'}
     )
 
     assert response.status_code == HTTPStatus.FORBIDDEN
