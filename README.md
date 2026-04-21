@@ -62,3 +62,14 @@ alembic upgrade head
 ```bash
 alembic downgrade -1
 ```
+
+
+## Conceitos
+* SOC - separed of concernes
+
+## Lives
+* Live de sqlalchemy
+
+* Serie Opentelemetry
+
+* Live migrations
