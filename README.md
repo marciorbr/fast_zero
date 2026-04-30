@@ -63,6 +63,14 @@ alembic upgrade head
 alembic downgrade -1
 ```
 
+# pytest
+
+```bash
+task test --collect-only
+task test -k test_create_user
+task test tests/test_db.py
+```
+
 
 ## Conceitos
 * SOC - separed of concernes
