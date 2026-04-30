@@ -3,9 +3,10 @@ from datetime import datetime
 
 import factory
 import pytest
+import pytest_asyncio
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine, event
-from sqlalchemy.orm import Session
+from sqlalchemy import event
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.pool import StaticPool
 
 from fast_zero.app import app
@@ -35,23 +36,21 @@ def client(session):
     app.dependency_overrides.clear()
 
 
-@pytest.fixture
-def session():
-    # O StaticPool é o padrão para :memory:, mas dispose() garante a limpeza
-    engine = create_engine(
-        'sqlite:///:memory:',
+@pytest_asyncio.fixture 
+async def session():
+    engine = create_async_engine(
+        'sqlite+aiosqlite:///:memory:',
         connect_args={'check_same_thread': False},
         poolclass=StaticPool,
     )
+    async with engine.begin() as conn: 
+        await conn.run_sync(table_registry.metadata.create_all) 
 
-    table_registry.metadata.create_all(engine)
-
-    with Session(engine) as session:
+    async with AsyncSession(engine, expire_on_commit=False) as session:
         yield session
 
-    # Ordem correta de limpeza para o SQLAlchemy 2.0:
-    table_registry.metadata.drop_all(engine)
-    engine.dispose()  # Mata o pool de conexões e remove o aviso do GC
+    async with engine.begin() as conn:
+        await conn.run_sync(table_registry.metadata.drop_all)
 
 
 @contextmanager
@@ -75,7 +74,7 @@ def mock_db_time():
 
 
 @pytest.fixture
-def user(session: Session):
+def user(session: AsyncSession):
 
     password = 'testtest'
     user = UserFactory(
@@ -91,7 +90,7 @@ def user(session: Session):
 
 
 @pytest.fixture
-def other_user(session: Session):
+def other_user(session: AsyncSession):
 
     user = UserFactory()
 
