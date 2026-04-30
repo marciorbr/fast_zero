@@ -82,5 +82,9 @@ task test tests/test_db.py
 
 * Live migrations
 
+* Live wsgi e unicorn
+
+* [Live Faker e Factory-boy](https://youtu.be/q_P-2h5L1cE)
+
 
 ## site 4devs gerar cpf, cnpj, etc..
