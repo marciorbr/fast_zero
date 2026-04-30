@@ -89,14 +89,14 @@ async def user(session: AsyncSession):
     return user
 
 
-@pytest.fixture
-def other_user(session: AsyncSession):
+@pytest_asyncio.fixture
+async def other_user(session: AsyncSession):
 
     user = UserFactory()
 
     session.add(user)
-    session.commit()
-    session.refresh(user)
+    await session.commit()
+    await session.refresh(user)
 
     return user
 
