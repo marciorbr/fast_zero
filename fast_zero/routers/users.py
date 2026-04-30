@@ -133,7 +133,7 @@ async def delete_user(
             detail='Not enough permissions to perform this action',
         )
 
-    session.delete(current_user)
+    await session.delete(current_user)
     await session.commit()
 
     return {'message': 'User deleted'}
