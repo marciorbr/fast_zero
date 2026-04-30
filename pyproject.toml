@@ -34,6 +34,10 @@ dev = [
     "pytest-asyncio (>=1.3.0,<2.0.0)"
 ]
 
+[tool.coverage.run]
+core = "ctrace"
+concurrency = ["thread", "greenlet"]
+
 [tool.ruff]
 line-length = 79
 extend-exclude = ['migrations']
