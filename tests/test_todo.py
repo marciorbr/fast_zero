@@ -131,12 +131,13 @@ def test_create_todo(client, token):
         },
     )
     assert response.status_code == HTTPStatus.CREATED
-    assert response.json() == {
-        'id': 1,
-        'title': 'Test Todo',
-        'description': 'This is a test todo',
-        'state': 'todo',
-    }
+
+    res_json = response.json()
+    assert res_json['title'] == 'Test Todo'
+    assert res_json['description'] == 'This is a test todo'
+    assert res_json['state'] == 'todo'
+    assert 'created_at' in res_json
+    assert 'updated_at' in res_json
 
 
 def test_list_empty_todos(client, token):
