@@ -2,7 +2,13 @@ from datetime import datetime
 from enum import Enum
 
 from sqlalchemy import ForeignKey, func
-from sqlalchemy.orm import Mapped, mapped_as_dataclass, mapped_column, registry
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_as_dataclass,
+    mapped_column,
+    registry,
+    relationship,
+)
 
 table_registry = registry()
 
@@ -28,6 +34,12 @@ class User:
     )
     updated_at: Mapped[datetime] = mapped_column(
         init=False, server_default=func.now(), onupdate=func.now()
+    )
+
+    todos: Mapped[list['Todo']] = relationship(
+        init=False,
+        cascade='all, delete-orphan',
+        lazy='selectin',
     )
 
 
