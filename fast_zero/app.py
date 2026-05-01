@@ -3,7 +3,7 @@ import sys
 
 from fastapi import FastAPI, Request
 
-from fast_zero.routers import auth, users
+from fast_zero.routers import auth, todos, users
 from fast_zero.schemas import Message
 
 # Configurar logging para saída no console
@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 app.include_router(auth.router)
 app.include_router(users.router)
+app.include_router(todos.router)
 
 
 @app.get('/', response_model=Message)

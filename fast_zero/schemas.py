@@ -1,5 +1,7 @@
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
+from fast_zero.models import TodoState
+
 
 class Message(BaseModel):
     message: str
@@ -31,3 +33,13 @@ class Token(BaseModel):
 class FilterPage(BaseModel):
     offset: int = Field(0, ge=0)
     limit: int = Field(100, ge=1)
+
+
+class TodoSchema(BaseModel):
+    title: str
+    description: str
+    state: TodoState = Field(default=TodoState.todo)
+
+
+class TodoPublic(TodoSchema):
+    id: int
