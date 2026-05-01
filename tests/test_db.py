@@ -66,6 +66,5 @@ async def test_user_todo_relationship(session, user: User):
     await session.refresh(user)
 
     user = await session.scalar(select(User).where(User.id == user.id))
-    breakpoint()
 
     assert user.todos == [todo]
