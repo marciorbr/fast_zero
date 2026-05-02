@@ -2,6 +2,7 @@ from dataclasses import asdict
 
 import pytest
 from sqlalchemy import select
+from sqlalchemy.exc import DataError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from fast_zero.models import Todo, User
@@ -87,7 +88,5 @@ async def test_user_todo_wrong_state(session, user: User):
     )
 
     session.add(todo)
-    await session.commit()
-
-    with pytest.raises(LookupError):
-        await session.refresh(user)
+    with pytest.raises(DataError):
+        await session.commit()
