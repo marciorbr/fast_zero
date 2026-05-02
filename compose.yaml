@@ -9,6 +9,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
+    networks:
+      - postgres-network
 
   fastzero_app:
     image: fastzero_app
@@ -23,6 +25,12 @@ services:
       ALGORITHM: ${ALGORITHM}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
       TIME_ZONE: ${TIME_ZONE}
+    networks:
+      - postgres-network
 
 volumes:
   pgdata:
+
+networks:
+  postgres-network:
+    driver: bridge
