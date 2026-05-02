@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Project specific
+.pytest_cache/
+.ruff_cache/
+.vscode/
+.git/
+.gitignore
+htmlcov/
+*.db
+.env
+poetry.lock
