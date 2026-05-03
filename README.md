@@ -1,90 +1,122 @@
+# Fast Zero
 
+Este é o projeto desenvolvido durante o curso [FastAPI do Zero](https://fastapidozero.dunossauro.com/), ministrado pelo Eduardo Mendes (Dunossauro). O objetivo do projeto é construir uma API robusta, testada e pronta para produção, utilizando as melhores práticas do ecossistema Python.
 
-https://fastapidozero.dunossauro.com/estavel/
+## 🚀 Tecnologias Utilizadas
 
-### Instalar versão especifica do python e criar o projeto.
+- **[FastAPI](https://fastapi.tiangolo.com/):** Framework web moderno e de alta performance.
+- **[Poetry](https://python-poetry.org/):** Gerenciamento de dependências e ambientes virtuais.
+- **[SQLAlchemy](https://www.sqlalchemy.org/):** ORM para interação com o banco de dados (Async).
+- **[Alembic](https://alembic.sqlalchemy.org/):** Ferramenta de migrações para o banco de dados.
+- **[Pydantic](https://docs.pydantic.dev/):** Validação de dados e configurações usando tipos Python.
+- **[Pytest](https://docs.pytest.org/):** Framework de testes automatizados.
+- **[Ruff](https://beta.ruff.rs/docs/):** Linter e formatador de código extremamente rápido.
+- **[Docker](https://www.docker.com/):** Containerização da aplicação e do banco de dados (PostgreSQL).
+- **[Taskipy](https://github.com/taskipy/taskipy):** Executor de tarefas para simplificar comandos comuns.
 
-* Para utilizarmos uma versão específica do Python em nosso ambiente, devemos solicitar ao Poetry que instale essa versão:
+## 🛠️ Configuração do Ambiente
+
+### Pré-requisitos
+- Python 3.13+
+- Poetry
+- Docker (opcional, para rodar via container)
+
+### Instalação
+
+1. Clone o repositório:
 ```bash
-poetry python install 3.13
-```
-* Criando um projeto
-
-Agora que temos o poetry e a versão do python que usaremos disponível, podemos iniciar a criação do nosso projeto. O primeiro passo é criar um novo projeto utilizando o Poetry, com o comando poetry new. Em seguida, navegaremos até o diretório criado:
-```bash
-poetry new --flat fast_zero 
+git clone <url-do-repositorio>
 cd fast_zero
 ```
 
-Ele criará uma estrutura de arquivos e pastas
-
-Com a estrutura inicial do projeto criada e estando no diretório do projeto, podemos informar ao Poetry que queremos usar a versão do Python que instalamos. Para isso, utilizamos o seguinte comando:
+2. Instale as dependências:
 ```bash
-poetry env use 3.13
+poetry install
 ```
 
-Em conjunto com essa instrução, devemos também especificar no Poetry que usaremos exatamente a versão 3.13 em nosso projeto. Para isso, alteramos o arquivo de configuração pyproject.toml na raiz do projeto:
-
-```toml
-pyproject.toml
-[project]
-# ...
-requires-python = ">=3.13,<4.0" 
-```
-
-Antes de iniciarmos nossa aplicação, temos que fazer um passo importante, habilitar o ambiente virtual, para que o python consiga enxergar nossas dependências instaladas. O poetry tem um comando específico para isso:
+3. Ative o ambiente virtual:
 ```bash
 poetry shell
 ```
 
-## Utilizando o ruff
+## 🗄️ Banco de Dados e Migrações
 
-poetry run ruff check .
+O projeto utiliza o **Alembic** para gerenciar o esquema do banco de dados.
 
-## Criar gitignore
-
-pipx run ignr -p python > .gitignore
-
-## Alembic
-
-* Gerar uma migration
+- Gerar uma nova migration (após alterar `models.py`):
 ```bash
-alembic revision --autogenerate -m "create users table"
+alembic revision --autogenerate -m "descrição da mudança"
 ```
 
-* Executar a migration para última versão
+- Aplicar as migrations:
 ```bash
 alembic upgrade head
 ```
 
-# Reverter a migrate
-
+- Reverter a última migration:
 ```bash
 alembic downgrade -1
 ```
 
-# pytest
+## 🏃 Executando a Aplicação
+
+Para iniciar o servidor de desenvolvimento:
 
 ```bash
-task test --collect-only
-task test -k test_create_user
-task test tests/test_db.py
+task run
+```
+A API estará disponível em `http://127.0.0.1:8000` e a documentação interativa em `/docs`.
+
+## 🧪 Testes e Qualidade
+
+O projeto preza pela alta cobertura de testes e qualidade de código.
+
+- **Executar testes:**
+```bash
+task test
 ```
 
+- **Linting (Ruff):**
+```bash
+task lint
+```
 
-## Conceitos
-* SOC - separed of concernes
+- **Formatação de código:**
+```bash
+task format
+```
 
-## Lives
-* Live de sqlalchemy
+## 🐳 Docker
 
-* Serie Opentelemetry
+Para rodar a aplicação completa (API + Banco de Dados PostgreSQL) via Docker Compose:
 
-* Live migrations
+```bash
+docker compose up -d
+```
 
-* Live wsgi e unicorn
+## 🏗️ Estrutura do Projeto
 
-* [Live Faker e Factory-boy](https://youtu.be/q_P-2h5L1cE)
+```text
+fast_zero/
+├── fast_zero/        # Código fonte da aplicação
+│   ├── routers/      # Definição das rotas (users, auth, todos)
+│   ├── models.py     # Modelos do SQLAlchemy
+│   ├── schemas.py    # Esquemas do Pydantic
+│   ├── security.py   # Lógica de autenticação e JWT
+│   └── app.py        # Ponto de entrada da aplicação
+├── migrations/       # Arquivos de migração do Alembic
+├── tests/           # Testes automatizados
+├── pyproject.toml    # Configurações do Poetry e ferramentas
+└── docker-compose.yml
+```
 
+## 📝 Aprendizados Principais
 
-## site 4devs gerar cpf, cnpj, etc..
+- Desenvolvimento de APIs assíncronas com FastAPI.
+- Implementação de CRUD completo com autenticação JWT.
+- Testes de integração e unitários com alta cobertura.
+- Containerização e CI/CD com GitHub Actions.
+- Separação de responsabilidades (SOC) e organização modular de rotas.
+
+---
+Projeto desenvolvido seguindo os ensinamentos da comunidade [Live de Python](https://www.youtube.com/@Dunossauro).
